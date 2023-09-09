@@ -37,9 +37,6 @@ export default class Runner{
       after.width=width;
       after.height=height;
 
-      const ctxBefore=before.getContext("2d")!;
-      const ctxAfter=after.getContext("2d")!;
-
       const cap = new cv.VideoCapture(player);
 
       setInterval(()=>{

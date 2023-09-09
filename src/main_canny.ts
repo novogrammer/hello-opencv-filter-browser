@@ -12,7 +12,7 @@ const player=document.querySelector<HTMLVideoElement>("#player")!;
 const before=document.querySelector<HTMLCanvasElement>("#before")!;
 const after=document.querySelector<HTMLCanvasElement>("#after")!;
 
-const runner=new Runner({
+new Runner({
   player,
   before,
   after,
