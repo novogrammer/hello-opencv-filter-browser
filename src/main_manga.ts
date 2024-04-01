@@ -1,6 +1,6 @@
 import './style.css'
 
-import filterCanny from "./filter_canny";
+import filterManga from "./filter_manga";
 import Runner from "./Runner";
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
@@ -16,7 +16,7 @@ new Runner({
   player,
   before,
   after,
-  filter:filterCanny
+  filter:filterManga
 });
 
 
