@@ -4,7 +4,7 @@ import filterDilate from "./filter_dilate";
 import filterReduceColors from "./filter_reduce_colors";
 import { modifyEachValueByTwo } from "./mat_utils";
 
-const {cv}=window;
+// const {cv}=window;
 
 export default function filterManga(imgBefore:opencv.Mat):opencv.Mat{
   const imgCanny = filterCanny(imgBefore);

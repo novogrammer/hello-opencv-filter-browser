@@ -1,6 +1,6 @@
 import { modifyEachValue } from "./mat_utils";
 
-const {cv}=window;
+// const {cv}=window;
 
 export default function filterReduceColors(imgBefore:opencv.Mat):opencv.Mat{
   const div = 4;
