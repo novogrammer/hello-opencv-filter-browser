@@ -7,6 +7,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         main_canny: resolve(__dirname, 'canny/index.html'),
+        main_manga: resolve(__dirname, 'manga/index.html'),
       },
     },
   },
