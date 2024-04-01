@@ -2,9 +2,8 @@ import filterBlur from "./filter_blur";
 import filterCanny from "./filter_canny";
 import filterDilate from "./filter_dilate";
 import filterReduceColors from "./filter_reduce_colors";
-import { modifyEachValueByTwo } from "./mat_utils";
 
-// const {cv}=window;
+const {cv}=window;
 
 export default function filterManga(imgBefore:opencv.Mat):opencv.Mat{
   const imgCanny = filterCanny(imgBefore);
@@ -14,16 +13,19 @@ export default function filterManga(imgBefore:opencv.Mat):opencv.Mat{
   const imgBlurReduceColors=filterReduceColors(imgBlur);
   imgBlur.delete();
 
-  const imgAfter=modifyEachValueByTwo(imgCannyDilate,imgBlurReduceColors,(value1,value2,channel)=>{
-    if(channel==3){
-      return value1;
-    }
-    if(value1==255){
-      return 0;
-    }
-    return value2;
-  });
+  const imgCannyDilateGray=new cv.Mat();
+  cv.cvtColor(imgCannyDilate,imgCannyDilateGray,cv.COLOR_RGBA2GRAY,0);
   imgCannyDilate.delete();
+
+  const imgCannyDilateGrayNot=new cv.Mat();
+  cv.bitwise_not(imgCannyDilateGray,imgCannyDilateGrayNot);
+  const imgCannyDilateNot=new cv.Mat();
+  cv.cvtColor(imgCannyDilateGrayNot,imgCannyDilateNot,cv.COLOR_GRAY2RGBA,0);
+
+  const imgAfter=new cv.Mat();
+  cv.bitwise_and(imgCannyDilateNot,imgBlurReduceColors,imgAfter);
+
+  imgCannyDilateNot.delete();
   imgBlurReduceColors.delete();
   // img_after = np.where(img_canny_dilate==255, 255-img_canny_dilate, img_blur_reduce_colors)
 

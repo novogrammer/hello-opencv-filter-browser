@@ -5,13 +5,10 @@ export function modifyEachValue(src:opencv.Mat,callback:(value:number,channel:nu
     throw new Error("src is not isContinuous");
   }
   const dst=src.clone();
-  for(let row=0;row<src.rows;row++){
-    for(let col=0;col<src.cols;col++){
-      for(let channel=0;channel<src.channels();channel++){
-        const i=row * src.cols * src.channels() + col * src.channels() + channel;
-        dst.data[i]=callback(src.data[i],channel);
-      }
-    }
+  const channels=dst.channels();
+  for(let i=0;i<dst.data.length;i++){
+    const channel=i%channels;
+    dst.data[i]=callback(src.data[i],channel);
   }
   return dst;
 }
@@ -33,13 +30,10 @@ export function modifyEachValueByTwo(src1:opencv.Mat,src2:opencv.Mat,callback:(v
     throw new Error("channels is not equal");
   }
   const dst=src1.clone();
-  for(let row=0;row<src1.rows;row++){
-    for(let col=0;col<src1.cols;col++){
-      for(let channel=0;channel<src1.channels();channel++){
-        const i=row * src1.cols * src1.channels() + col * src1.channels() + channel;
-        dst.data[i]=callback(src1.data[i],src2.data[i],channel);
-      }
-    }
+  const channels=dst.channels();
+  for(let i=0;i<dst.data.length;i++){
+    const channel=i%channels;
+    dst.data[i]=callback(src1.data[i],src2.data[i],channel);
   }
   return dst;
 }
@@ -48,15 +42,35 @@ export function medianInGrayImage(src:opencv.Mat){
   if(src.channels()!=1){
     throw new Error("channels must be 1");
   }
-  const grayData=Uint8Array.from(src.data);
-  grayData.sort((a,b)=>a-b);
-  const half = Math.floor(grayData.length / 2);
-  if(grayData.length%2==1){
-    return grayData[half];
-  }else{
-    return (grayData[half-1] + grayData[half])/2;
-    
+  const grayCountList = Array(256).fill(0);
+  for(let gray of src.data){
+    if(255<gray || gray<0){
+      throw new Error("gray is out of bounds");
+    }
+    grayCountList[gray]+=1;
   }
-
-
+  const half1 = Math.floor(src.data.length / 2);
+  let half2=half1;
+  if(src.data.length%2==0){
+    half2=half1-1;
+  }
+  let halfRemain1=half1;
+  let median1=0;
+  for(let i=0;i<grayCountList.length;i++){
+    median1=i;
+    halfRemain1-=grayCountList[i];
+    if(halfRemain1<=0){
+      break;
+    }
+  }
+  let halfRemain2=half2;
+  let median2=0;
+  for(let i=0;i<grayCountList.length;i++){
+    median2=i;
+    halfRemain2-=grayCountList[i];
+    if(halfRemain2<=0){
+      break;
+    }
+  }
+  return (median1 + median2)/2;
 }

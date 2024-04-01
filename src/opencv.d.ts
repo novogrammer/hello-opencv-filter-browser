@@ -41,6 +41,9 @@ namespace opencv {
     morphologyDefaultBorderValue():Scalar;
     dilate(src:Mat,dst:Mat,kernel:Mat,anchor:Point,iterations:number,borderType:number,borderValue:Scalar):void;
     GaussianBlur(src:Mat,dst:Mat,ksize:Size,sigmaX:number,sigmaY:number=0,borderType:number=BORDER_DEFAULT):void;
+    bitwise_not(src:Mat,dst:Mat):void;
+    bitwise_or(src1:Mat,src2:Mat,dst:Mat):void;
+    bitwise_and(src1:Mat,src2:Mat,dst:Mat):void;
   }
 
 }
