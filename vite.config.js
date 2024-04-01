@@ -8,6 +8,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         main_canny: resolve(__dirname, 'canny/index.html'),
         main_manga: resolve(__dirname, 'manga/index.html'),
+        main_manga2: resolve(__dirname, 'manga2/index.html'),
       },
     },
   },
