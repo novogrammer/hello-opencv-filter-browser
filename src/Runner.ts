@@ -9,12 +9,13 @@ interface RunnerParams{
   player:HTMLVideoElement;
   before:HTMLCanvasElement;
   after:HTMLCanvasElement;
+  debug?:HTMLDivElement;
   filter:FilterCallback
 }
 
 export default class Runner{
   stats:Stats;
-  constructor({player,before,after,filter}:RunnerParams){
+  constructor({player,before,after,debug,filter}:RunnerParams){
     // console.log("Runner");
     // console.log(cv);
     this.stats=new Stats();
@@ -41,6 +42,15 @@ export default class Runner{
       before.height=height;
       after.width=width;
       after.height=height;
+
+      if(debug){
+        debug.innerHTML=`
+        <p>
+          width: ${width}<br>
+          height: ${height}<br>
+        </p>
+        `;
+      }
 
       const cap = new cv.VideoCapture(player);
 
