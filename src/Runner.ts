@@ -1,3 +1,4 @@
+import Stats from "stats.js";
 
 type FilterCallback=(imgBefore:opencv.Mat)=>opencv.Mat;
 
@@ -12,9 +13,13 @@ interface RunnerParams{
 }
 
 export default class Runner{
+  stats:Stats;
   constructor({player,before,after,filter}:RunnerParams){
     // console.log("Runner");
     // console.log(cv);
+    this.stats=new Stats();
+    document.body.appendChild( this.stats.dom );
+    
     const setupAsync=async ()=>{
       const stream = await navigator.mediaDevices.getUserMedia({
         audio:false,
@@ -40,6 +45,7 @@ export default class Runner{
       const cap = new cv.VideoCapture(player);
 
       setInterval(()=>{
+        this.stats.begin();
         // ctxBefore.drawImage(player,0,0,before.width,before.height);
         const beforeImage=new cv.Mat(height, width, cv.CV_8UC4);
         cap.read(beforeImage);
@@ -50,6 +56,7 @@ export default class Runner{
         beforeImage.delete();
         afterImage.delete();
 
+        this.stats.end();
       },1000/60);
 
     };
