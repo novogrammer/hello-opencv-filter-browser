@@ -47,18 +47,32 @@ export default class Runner{
       const cap = new cv.VideoCapture(player);
 
       setInterval(()=>{
+        this.stats.begin();
+      
+        const videoTracks=stream.getVideoTracks();
+        if(videoTracks.length==0){
+          throw new Error("videoTracks.length==0")
+        }
+        const settings=videoTracks[0].getSettings();
+        if(!(settings.width && settings.height)){
+          throw new Error("width or height is undefined")
+        }
+        const {width,height}=settings;
+        player.width=width;
+        player.height=height;
+        before.width=width;
+        before.height=height;
+        after.width=width;
+        after.height=height;
         if(debug){
           debug.innerHTML=`
           <p>
             width: ${width}<br>
             height: ${height}<br>
-            videoWidth: ${cap.video.videoWidth}<br>
-            videoHeight: ${cap.video.videoHeight}<br>
           </p>
           `;
         }
   
-        this.stats.begin();
         // ctxBefore.drawImage(player,0,0,before.width,before.height);
         const beforeImage=new cv.Mat(height, width, cv.CV_8UC4);
         cap.read(beforeImage);
