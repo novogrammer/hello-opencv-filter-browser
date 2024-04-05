@@ -24,6 +24,7 @@ namespace opencv {
   class VideoCapture{
     constructor(player:HTMLVideoElement);
     read(output:Mat):boolean;
+    video:HTMLVideoElement;
   }
   interface CV{
     Mat:typeof Mat;

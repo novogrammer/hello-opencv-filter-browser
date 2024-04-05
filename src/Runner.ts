@@ -43,18 +43,21 @@ export default class Runner{
       after.width=width;
       after.height=height;
 
-      if(debug){
-        debug.innerHTML=`
-        <p>
-          width: ${width}<br>
-          height: ${height}<br>
-        </p>
-        `;
-      }
 
       const cap = new cv.VideoCapture(player);
 
       setInterval(()=>{
+        if(debug){
+          debug.innerHTML=`
+          <p>
+            width: ${width}<br>
+            height: ${height}<br>
+            videoWidth: ${cap.video.videoWidth}<br>
+            videoHeight: ${cap.video.videoHeight}<br>
+          </p>
+          `;
+        }
+  
         this.stats.begin();
         // ctxBefore.drawImage(player,0,0,before.width,before.height);
         const beforeImage=new cv.Mat(height, width, cv.CV_8UC4);
