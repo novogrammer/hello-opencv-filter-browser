@@ -9,7 +9,7 @@ export function modifyEachValue(src:opencv.Mat,callback:(value:number,channel:nu
   const dstData=new Uint8Array(src.data.length);
 
   srcData.set(src.data);
-  
+
   const channels=src.channels();
   for(let i=0;i<srcData.length;i++){
     const channel=i%channels;
@@ -17,7 +17,7 @@ export function modifyEachValue(src:opencv.Mat,callback:(value:number,channel:nu
   }
   const dst=src.clone();
   dst.data.set(dstData);
-  // debugger;
+  
   return dst;
 }
 
