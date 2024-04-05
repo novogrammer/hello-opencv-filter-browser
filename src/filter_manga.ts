@@ -19,8 +19,10 @@ export default function filterManga(imgBefore:opencv.Mat):opencv.Mat{
 
   const imgCannyDilateGrayNot=new cv.Mat();
   cv.bitwise_not(imgCannyDilateGray,imgCannyDilateGrayNot);
+  imgCannyDilateGray.delete();
   const imgCannyDilateNot=new cv.Mat();
   cv.cvtColor(imgCannyDilateGrayNot,imgCannyDilateNot,cv.COLOR_GRAY2RGBA,0);
+  imgCannyDilateGrayNot.delete();
 
   const imgAfter=new cv.Mat();
   cv.bitwise_and(imgCannyDilateNot,imgBlurReduceColors,imgAfter);

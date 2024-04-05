@@ -4,12 +4,20 @@ export function modifyEachValue(src:opencv.Mat,callback:(value:number,channel:nu
   if(!src.isContinuous()){
     throw new Error("src is not isContinuous");
   }
-  const dst=src.clone();
-  const channels=dst.channels();
-  for(let i=0;i<dst.data.length;i++){
+  
+  const srcData=new Uint8Array(src.data.length);
+  const dstData=new Uint8Array(src.data.length);
+
+  srcData.set(src.data);
+
+  const channels=src.channels();
+  for(let i=0;i<srcData.length;i++){
     const channel=i%channels;
-    dst.data[i]=callback(src.data[i],channel);
+    dstData[i]=callback(srcData[i],channel);
   }
+  const dst=src.clone();
+  dst.data.set(dstData);
+  
   return dst;
 }
 
@@ -29,12 +37,18 @@ export function modifyEachValueByTwo(src1:opencv.Mat,src2:opencv.Mat,callback:(v
   if(src1.channels()!=src2.channels()){
     throw new Error("channels is not equal");
   }
-  const dst=src1.clone();
-  const channels=dst.channels();
-  for(let i=0;i<dst.data.length;i++){
+  const src1Data=new Uint8Array(src1.data.length);
+  const src2Data=new Uint8Array(src2.data.length);
+  const dstData=new Uint8Array(src1.data.length);
+  src1Data.set(src1.data);
+  src2Data.set(src2.data);
+  const channels=src1.channels();
+  for(let i=0;i<dstData.length;i++){
     const channel=i%channels;
-    dst.data[i]=callback(src1.data[i],src2.data[i],channel);
+    dstData[i]=callback(src1Data[i],src2Data[i],channel);
   }
+  const dst=src1.clone();
+  dst.data.set(dstData);
   return dst;
 }
 

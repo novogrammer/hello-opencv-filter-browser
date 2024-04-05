@@ -9,7 +9,8 @@ namespace opencv {
     delete();
     rows:number;
     cols:number;
-    data:number[];
+    data:Uint8Array;
+    ucharAt(row:number,col:number):number;
     static ones(rows:number,cols:number,type:number):Mat;
   }
   class Point{
