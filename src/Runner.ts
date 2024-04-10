@@ -89,7 +89,7 @@ export default class Runner{
         }else{
           scale=VIDEO_HEIGHT/height;
         }
-        console.log(scale);
+        // console.log(scale);
 
         let croppedImage:opencv.Mat;
         if(aspect!=videoAspect){
