@@ -24,7 +24,9 @@ export default class Runner{
     const setupAsync=async ()=>{
       const stream = await navigator.mediaDevices.getUserMedia({
         audio:false,
-        video: { facingMode: "user" },
+        video: {
+          facingMode: "environment",
+        },
       });
       player.srcObject = stream;
       const videoTracks=stream.getVideoTracks();
