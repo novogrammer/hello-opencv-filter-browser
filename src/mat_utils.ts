@@ -1,5 +1,4 @@
 
-
 export function modifyEachValue(src:opencv.Mat,callback:(value:number,channel:number)=>number):opencv.Mat{
   if(!src.isContinuous()){
     throw new Error("src is not isContinuous");
@@ -87,4 +86,46 @@ export function medianInGrayImage(src:opencv.Mat){
     }
   }
   return (median1 + median2)/2;
+}
+
+export function cropImage(src:opencv.Mat,width:number,height:number):opencv.Mat{
+  const {cv}=window;
+  if(!cv){
+    throw new Error("cv is null");
+  }
+  if(src.cols<width){
+    throw new Error("width is too large");
+  }
+  if(src.rows<height){
+    throw new Error("height is too large");
+  }
+  const srcData=new Uint8Array(src.data.length);
+
+  const channels=src.channels();
+  const cols=src.cols;
+  const rows=src.rows;
+  const dst=new cv.Mat(height,width,src.type());
+  const dstData=new Uint8Array(dst.data.length);
+
+  const offsetX=Math.floor((cols-width)*0.5);
+  const offsetY=Math.floor((rows-height)*0.5);
+  debugger;
+  
+
+  srcData.set(src.data);
+  for(let y=0;y<height;y++){
+    for(let x=0;x<width;x++){
+      for(let channel=0;channel<channels;channel++){
+        const srcY=y+offsetY;
+        const srcX=x+offsetX;
+        const srcIndex=srcY * cols * channels + srcX * channels + channel;
+        const dstIndex=y * width * channels + x * channels + channel;
+        dstData[dstIndex]=srcData[srcIndex];
+      }
+    
+    }
+  }
+  dst.data.set(dstData);
+  
+  return dst;
 }

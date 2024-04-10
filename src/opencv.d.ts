@@ -12,6 +12,7 @@ namespace opencv {
     data:Uint8Array;
     ucharAt(row:number,col:number):number;
     static ones(rows:number,cols:number,type:number):Mat;
+    type():number;
   }
   class Point{
     constructor(x:number,y:number);
@@ -37,6 +38,7 @@ namespace opencv {
     COLOR_GRAY2RGBA:number;
     BORDER_CONSTANT:number;
     BORDER_DEFAULT:number;
+    INTER_LINEAR:number;
     imshow(HTMLCanvasElement,Mat):void;
     cvtColor(src:Mat,dst:Mat,code:number,dstCn:number);
     Canny(src:Mat,dst:Mat,threthold1:number,threthold2:number):void;
@@ -46,6 +48,7 @@ namespace opencv {
     bitwise_not(src:Mat,dst:Mat):void;
     bitwise_or(src1:Mat,src2:Mat,dst:Mat):void;
     bitwise_and(src1:Mat,src2:Mat,dst:Mat):void;
+    resize(src:Mat,dst:Mat,dsize:Size,fx:number,fy:number,interpolation:number):void;
   }
 
 }

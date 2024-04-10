@@ -1,4 +1,5 @@
 import Stats from "stats.js";
+import { cropImage } from "./mat_utils";
 
 type FilterCallback=(imgBefore:opencv.Mat)=>opencv.Mat;
 
@@ -12,6 +13,8 @@ interface RunnerParams{
   debug?:HTMLDivElement;
   filter:FilterCallback
 }
+const VIDEO_WIDTH=480;
+const VIDEO_HEIGHT=480;
 
 export default class Runner{
   stats:Stats;
@@ -26,6 +29,8 @@ export default class Runner{
         audio:false,
         video: {
           facingMode: "environment",
+          width: { min: VIDEO_WIDTH, ideal: VIDEO_WIDTH },
+          height: { min: VIDEO_HEIGHT, ideal: VIDEO_HEIGHT },
         },
       });
       player.srcObject = stream;
@@ -40,10 +45,10 @@ export default class Runner{
       const {width,height}=settings;
       player.width=width;
       player.height=height;
-      before.width=width;
-      before.height=height;
-      after.width=width;
-      after.height=height;
+      before.width=VIDEO_WIDTH;
+      before.height=VIDEO_HEIGHT;
+      after.width=VIDEO_WIDTH;
+      after.height=VIDEO_HEIGHT;
 
 
       const cap = new cv.VideoCapture(player);
@@ -62,10 +67,6 @@ export default class Runner{
         const {width,height}=settings;
         player.width=width;
         player.height=height;
-        before.width=width;
-        before.height=height;
-        after.width=width;
-        after.height=height;
         if(debug){
           debug.innerHTML=`
           <p>
@@ -76,8 +77,38 @@ export default class Runner{
         }
   
         // ctxBefore.drawImage(player,0,0,before.width,before.height);
-        const beforeImage=new cv.Mat(height, width, cv.CV_8UC4);
-        cap.read(beforeImage);
+        const originalImage=new cv.Mat(height, width, cv.CV_8UC4);
+        cap.read(originalImage);
+
+        const aspect=width/height;
+        let scale=1;
+        const videoAspect=VIDEO_WIDTH/VIDEO_HEIGHT;
+        // console.log(`${aspect} ${videoAspect}`);
+        if(aspect<videoAspect){
+          scale=VIDEO_WIDTH/width;
+        }else{
+          scale=VIDEO_HEIGHT/height;
+        }
+        console.log(scale);
+
+        let croppedImage:opencv.Mat;
+        if(aspect!=videoAspect){
+          croppedImage=cropImage(originalImage,Math.floor(VIDEO_WIDTH/scale),Math.floor(VIDEO_HEIGHT/scale));
+          originalImage.delete();
+  
+        }else{
+          croppedImage=originalImage;
+        }
+
+        let beforeImage:opencv.Mat;
+        const dsize=new cv.Size(VIDEO_WIDTH,VIDEO_HEIGHT);
+        if(scale!=1){
+          beforeImage=new cv.Mat();
+          cv.resize(croppedImage,beforeImage,dsize,0,0,cv.INTER_LINEAR);
+          croppedImage.delete();
+        }else{
+          beforeImage=croppedImage;
+        }
         const afterImage=filter(beforeImage);
 
         cv.imshow(before,beforeImage);
